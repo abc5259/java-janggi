@@ -13,7 +13,7 @@ public class Guard extends Piece {
     @Override
     public boolean canMove(PiecesOnPath piecesOnPath) {
         if (piecesOnPath.isDestinationOfDynasty(dynasty)) {
-            throw new IllegalArgumentException("목적지에 같은 나라의 기물이 있어 갈 수 없습니다.");
+            return false;
         }
         return piecesOnPath.isAllEmptyWithoutDestination();
     }

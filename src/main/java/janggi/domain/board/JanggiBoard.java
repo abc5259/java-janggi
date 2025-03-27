@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class JanggiBoard {
 
@@ -26,8 +25,9 @@ public class JanggiBoard {
     }
 
     public void move(Dynasty dynasty, Point from, Point to) {
+        validateExistPiece(from);
+
         Piece piece = pieces.get(from);
-        validateExistPiece(piece);
         validateMovablePiece(dynasty, piece);
 
         List<Point> movePath = piece.movePath(from, to);
@@ -40,8 +40,8 @@ public class JanggiBoard {
         return pieces.getOrDefault(point, new EmptyPiece());
     }
 
-    private void validateExistPiece(Piece piece) {
-        if (piece == null) {
+    private void validateExistPiece(Point point) {
+        if (!pieces.containsKey(point)) {
             throw new IllegalArgumentException("시작 위치에 기물이 존재하지 않습니다.");
         }
     }
@@ -65,6 +65,10 @@ public class JanggiBoard {
         return new PiecesOnPath(piecesOnPth);
     }
 
+    public Map<Point, Piece> getPieces() {
+        return Collections.unmodifiableMap(pieces);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
@@ -72,15 +76,11 @@ public class JanggiBoard {
         }
 
         JanggiBoard that = (JanggiBoard) o;
-        return Objects.equals(pieces, that.pieces);
+        return pieces.equals(that.pieces);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(pieces);
-    }
-
-    public Map<Point, Piece> getPieces() {
-        return Collections.unmodifiableMap(pieces);
+        return pieces.hashCode();
     }
 }
